@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Movie Previews</string>
+    <string name="webService" translatable="false">http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&amp;api_key=035e65ca7fde5dd3f8cf3e4913504cd2</string>
+</resources>
