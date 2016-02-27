@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 public class FragmentForecast extends Fragment {
     GridView gridView;
     ImageAdapter adapter;
+    ProgressBar progressBar;
 
     public FragmentForecast() {
     }
@@ -58,6 +60,7 @@ public class FragmentForecast extends Fragment {
                 startActivity(intent);
             }
         });
+        progressBar = (ProgressBar) vista.findViewById(R.id.loading_spinner);
         setHasOptionsMenu(true);
         return vista;
     }
@@ -90,6 +93,13 @@ public class FragmentForecast extends Fragment {
 
         public FetchMovieTask() {
             w = getResources().getString(R.string.webService);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+
         }
 
         @Override
@@ -165,6 +175,7 @@ public class FragmentForecast extends Fragment {
                 for (ObjectMovie dayForecastStr : objectMovies) {
                     adapter.add(dayForecastStr);
                 }
+                progressBar.setVisibility(View.GONE);
 
                 // New data is back from the server.  Hooray!
             }
