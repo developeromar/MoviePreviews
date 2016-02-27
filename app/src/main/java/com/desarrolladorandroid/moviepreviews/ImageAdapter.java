@@ -31,4 +31,5 @@ public class ImageAdapter extends ArrayAdapter<ObjectMovie> {
         Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg ").into(imageView);
         return convertView;
     }
+    //n1y094tVDFATSzkTnFxoGZ1qNsG.jpg
 }
