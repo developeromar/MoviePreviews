@@ -1,11 +1,14 @@
 package com.desarrolladorandroid.moviepreviews;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -41,7 +44,7 @@ public class FragmentForecast extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View vista = inflater.inflate(R.layout.fragment_forecast, null);
         gridView = (GridView) vista.findViewById(R.id.gridView);
         adapter = new ImageAdapter(getContext(), new ArrayList<ObjectMovie>());
@@ -49,16 +52,37 @@ public class FragmentForecast extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Snackbar.make(view, "position " + position, Snackbar.LENGTH_LONG).show();
+                ObjectMovie movie = adapter.getItem(position);
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, movie);
+                startActivity(intent);
             }
         });
+        setHasOptionsMenu(true);
         return vista;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        new FetchMovieTask().execute();
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragmentforecast, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_refresh:
+                new FetchMovieTask().execute();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public class FetchMovieTask extends AsyncTask<Void, Void, ObjectMovie[]> {
@@ -134,6 +158,18 @@ public class FragmentForecast extends Fragment {
             return null;
         }
 
+        @Override
+        protected void onPostExecute(ObjectMovie[] objectMovies) {
+            if (objectMovies != null) {
+                adapter.clear();
+                for (ObjectMovie dayForecastStr : objectMovies) {
+                    adapter.add(dayForecastStr);
+                }
+
+                // New data is back from the server.  Hooray!
+            }
+        }
+
         private ObjectMovie[] getJSONDataMovie(String JSON) throws JSONException {
             ObjectMovie[] regreso = null;
             JSONObject principal = new JSONObject(JSON);
@@ -153,5 +189,5 @@ public class FragmentForecast extends Fragment {
             return regreso;
         }
     }
-    //http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=035e65ca7fde5dd3f8cf3e4913504cd2
+
 }

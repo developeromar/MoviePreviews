@@ -1,9 +1,11 @@
 package com.desarrolladorandroid.moviepreviews;
 
+import java.io.Serializable;
+
 /**
  * Created by cosanchez on 26/02/2016.
  */
-public class ObjectMovie {
+public class ObjectMovie implements Serializable {
     String poster_path;
     boolean adult;
     String overview;

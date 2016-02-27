@@ -28,8 +28,10 @@ public class ImageAdapter extends ArrayAdapter<ObjectMovie> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_image_layout, parent, false);
         }
         ImageView imageView = (ImageView) convertView.findViewById(R.id.image_item);
-        Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg ").into(imageView);
+        String pad = getItem(position).getPoster_path();
+        if (pad != null) {
+            Picasso.with(getContext()).load(getContext().getString(R.string.pad) + pad).into(imageView);
+        }
         return convertView;
     }
-    //n1y094tVDFATSzkTnFxoGZ1qNsG.jpg
 }
